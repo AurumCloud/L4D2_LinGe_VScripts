@@ -9,18 +9,19 @@ printl("[LinGe] 标记提示 正在载入");
 ::LinGe.Hint.Config <- {
 	limit = 4, // 玩家屏幕上能同时显示的提示数量上限
 	offscreenShow = true, // 提示在画面之外是否也要显示
-	help = { // 队友需要帮助时出现提示 包括 倒地、挂边、黑白、被控
-		duration = 15, // 提示持续时间，若<=0则彻底关闭所有队友需要帮助的提示
-		dominateDelay = 0, // 被控延迟，玩家被控多少秒后才会出现提示，若设置为0则无延迟立即显示
-						// 若<0，则不会自动提示玩家被控，但是玩家可以用按键自己发出呼救
-		smoker = "被捆绑Play",
-		hunter = "被扑倒了",
-		charger = "被牛牛顶了",
-		jockey = "要被玩坏了",
-		ledge = "笨比地挂边了",
-		dying = "濒死",
-		incap = "倒地了",
+	help = { 
+		duration = 15, 
+		dominateDelay = 0, // Incapacitation delay, time in seconds before the prompt appears after a player is incapacitated. If set to 0, the prompt appears immediately
+						// If < 0, no automatic prompt will appear for incapacitation, but players can manually call for help using a key
+		smoker = "Bound by Smoker",
+		hunter = "Pounced by Hunter",
+		charger = "Charged by Charger",
+		jockey = "Being ridden by Jockey",
+		ledge = "Hanging on the ledge",
+		dying = "Dying",
+		incap = "Incapacitated",
 	},
+
 	ping = {
 		duration = 12, // 玩家用按键发出信号的持续时间，若<=0则禁止玩家发出信号
 		emptySpace = true, // 可以标记到什么都没有的位置
@@ -35,7 +36,7 @@ printl("[LinGe] 标记提示 正在载入");
 if (::LinGe.Hint.Config.limit > 8)
 {
 	::LinGe.Hint.Config.limit = 8;
-	printl("[LinGe] LinGe.Hint.Config.limit 超过上限值，自动置为 8");
+	printl("[LinGe] LinGe.Hint.Config.limit exceeded the maximum value, automatically set to 8");
 }
 
 ::LinGe.Hint.OnGameEvent_player_death <- function (params)
@@ -73,9 +74,7 @@ if (::LinGe.Hint.Config.limit > 8)
 		if (!IsPlayerABot(dierEntity))
 		{
 			if (null == Config.deadChat || "" == Config.deadChat)
-				ClientPrint(null, 3, "\x03" + dierEntity.GetPlayerName() + "\x04 牺牲了");
-			else
-				Say(dierEntity, "\x03" + Config.deadChat, false);
+				ClientPrint(null, 3, "\x03" + dierEntity.GetPlayerName() + "\x04 has sacrificed themselves");	
 		}
 	}
 }
@@ -160,7 +159,7 @@ local hintEvent = {};
 	else if (typeof player == "integer")
 		index = player;
 	else
-		throw "player 参数类型非法";
+		throw "player parameter type is illegal";
 
 	playerHint.rawset(index, { entTbl={}, countTbl={}, lastChanged={} });
 	local countTbl = playerHint[index].countTbl;
@@ -216,13 +215,13 @@ local hintTemplateTbl = {
 		targetEnt = Entities.FindByName(null, target);
 	}
 	else
-		throw "target 参数类型非法";
+		throw "target parameter type is illegal";
 
 	if (!targetEnt || !targetEnt.IsValid())
-		throw "targetEnt 无效";
+		throw "targetEnt is invalid";
 
 	if (hintMode < 0 || hintMode >= HINTMODE.__MAX__)
-		throw "hintMode 参数非法";
+		throw "hintMode parameter is illegal";
 
 	local hintTbl = clone hintTemplateTbl;
 	hintTbl.hint_target = target;
@@ -283,7 +282,7 @@ local hintTemplateTbl = {
 	else if (typeof params == "string")
 		targetname = params;
 	else
-		throw "参数非法";
+		throw "Invalid argument";
 
 	if (targetname == "" || !hintEvent.rawin(targetname))
 		return;
@@ -610,7 +609,7 @@ local humanIndex = 0;
 	local ent = g_ModeScript.CreateSingleSimpleEntityFromTable(tbl);
 	if (!ent)
 	{
-		printl("[LinGe] QuickShowHint 创建实体失败");
+		printl("[LinGe] QuickShowHint failed to create entity");
 		return null;
 	}
 	ent.ValidateScriptScope();
@@ -791,7 +790,7 @@ if (::LinGe.Hint.Config.help.duration > 0 && ::LinGe.Hint.Config.help.dominateDe
 		text += Config.help.charger;
 		break;
 	default:
-		throw "不可预见的错误";
+		throw "Unexpected error";
 	}
 	AddHint(player, "icon_blank", text, 3, Config.help.duration, HINTMODE.DOMINATE, activator);
 }.bindenv(::LinGe.Hint);
@@ -875,63 +874,63 @@ if (::LinGe.Hint.Config.help.duration > 0)
 // https://github.com/samisalreadytaken/vscripts/blob/master/left4dead2/ping_system.nut
 // 所有可拾取/使用的物品名称 不一定只是武器
 local weaponName = {
-	oxygentank			= "氧气罐",
-	propanetank			= "煤气罐",
-	fireworkcrate		= "烟花",
-	gnome				= "侏儒",
-	cola_bottles		= "可乐",
-	gascan				= "汽油桶",
+    oxygentank          = "Oxygen Tank",
+    propanetank         = "Propane Tank",
+    fireworkcrate       = "Fireworks",
+    gnome               = "Gnome",
+    cola_bottles        = "Cola",
+    gascan              = "Gas Can",
 
-	first_aid_kit		= "医疗包",
-	pain_pills			= "止疼药",
-	adrenaline			= "肾上腺素",
-	defibrillator		= "电击器",
+    first_aid_kit       = "First Aid Kit",
+    pain_pills          = "Pain Pills",
+    adrenaline          = "Adrenaline",
+    defibrillator       = "Defibrillator",
 
-	upgradepack_explosive	= "高爆弹药包",
-	upgradepack_incendiary	= "燃烧弹药包",
-	laser_sight = "激光瞄准",
+    upgradepack_explosive   = "Explosive Ammo Pack",
+    upgradepack_incendiary  = "Incendiary Ammo Pack",
+    laser_sight        = "Laser Sight",
 
-	pipe_bomb			= "土制炸弹",
-	molotov				= "燃烧瓶",
-	vomitjar			= "胆汁",
+    pipe_bomb          = "Pipe Bomb",
+    molotov            = "Molotov",
+    vomitjar           = "Bile Jar",
 
-	ammo				= "弹药",
-	melee				= "近战武器",
-	baseball_bat		= "棒球棒",
-	fireaxe				= "斧头",
-	crowbar				= "撬棍",
-	cricket_bat			= "板球拍",
-	electric_guitar		= "电吉他",
-	frying_pan			= "平底锅",
-	golfclub			= "高尔夫球棒",
-	katana				= "武士刀",
-	knife				= "小刀",
-	machete				= "砍刀",
-	pitchfork			= "干草叉",
-	shovel				= "铲子",
-	tonfa				= "警棍",
-	riotshield			= "防爆盾",
-	chainsaw			= "电锯",
+    ammo               = "Ammo",
+    melee              = "Melee Weapon",
+    baseball_bat       = "Baseball Bat",
+    fireaxe            = "Axe",
+    crowbar            = "Crowbar",
+    cricket_bat        = "Cricket Bat",
+    electric_guitar    = "Electric Guitar",
+    frying_pan         = "Frying Pan",
+    golfclub           = "Golf Club",
+    katana             = "Katana",
+    knife              = "Knife",
+    machete            = "Machete",
+    pitchfork          = "Pitchfork",
+    shovel             = "Shovel",
+    tonfa              = "Police Baton",
+    riotshield         = "Riot Shield",
+    chainsaw           = "Chainsaw",
 
-	pistol				= "手枪",
-	pistol_magnum		= "马格南",
-	shotgun_chrome		= "霰弹枪",
-	pumpshotgun			= "霰弹枪",
-	autoshotgun			= "自动霰弹枪",
-	shotgun_spas		= "自动霰弹枪",
-	grenade_launcher	= "榴弹",
-	smg					= "SMG冲锋枪",
-	smg_mp5				= "MP5冲锋枪",
-	smg_silenced		= "MAC冲锋枪",
-	rifle				= "M16步枪",
-	rifle_ak47			= "AK47步枪",
-	rifle_desert		= "SCAR步枪",
-	rifle_sg552			= "SG552步枪",
-	rifle_m60			= "M60机枪",
-	sniper_scout		= "SCOUT狙击枪",
-	sniper_awp			= "AWP狙击枪",
-	hunting_rifle		= "猎枪",
-	sniper_military		= "连发狙击枪",
+    pistol             = "Pistol",
+    pistol_magnum      = "Magnum",
+    shotgun_chrome     = "Chrome Shotgun",
+    pumpshotgun        = "Pump Shotgun",
+    autoshotgun        = "Auto Shotgun",
+    shotgun_spas       = "SPAS Auto Shotgun",
+    grenade_launcher   = "Grenade Launcher",
+    smg                = "SMG",
+    smg_mp5            = "MP5 SMG",
+    smg_silenced       = "Silenced MAC SMG",
+    rifle              = "M16",
+    rifle_ak47         = "AK47",
+    rifle_desert       = "SCAR",
+    rifle_sg552        = "SG552",
+    rifle_m60          = "M60",
+    sniper_scout       = "SCOUT",
+    sniper_awp         = "AWP",
+    hunting_rifle      = "Hunting Rifle",
+    sniper_military    = "Military Sniper",
 };
 
 local weaponIcon = { // 特定物品可以显示特定图标
@@ -1094,20 +1093,20 @@ const MAX_TRACE_LENGTH	= 56755.840862417;
 		if (player.GetSpecialInfectedDominatingMe())
 		{
 			ShowPlayerBeDominating(player);
-			ClientPrint(player, 3, "\x05已发出被控求救信号");
+			ClientPrint(player, 3, "\x05Rescue signal has been sent");
 			return;
 		}
 		else if (player.IsHangingFromLedge())
 		{
 			ShowPlayerLedge(player);
-			ClientPrint(player, 3, "\x05已发出挂边求救信号");
+			ClientPrint(player, 3, "\x05Rescue signal has been sent for being stuck");
 			return;
 		}
 		// 如果玩家处于虚弱状态，则发出求救信号
 		else if (player.IsIncapacitated())
 		{
 			ShowPlayerIncap(player);
-			ClientPrint(player, 3, "\x05已发出倒地求救信号");
+			ClientPrint(player, 3, "\x05Rescue signal has been sent for being down");
 			return;
 		}
 	}
@@ -1151,13 +1150,13 @@ else
 			if (Config.help.duration <= 0 || CheckSurvivor(pEnt, player))
 			{
 				// 如果不允许玩家状态标记，或者队友是健康的，则单独给发出标记的玩家提示血量
-				AddHint(pEnt, LINGE_NONE_ICON, "当前血量:" + ceil(pEnt.GetHealth() + pEnt.GetHealthBuffer()), -1,
+				AddHint(pEnt, LINGE_NONE_ICON, "Current health:" + ceil(pEnt.GetHealth() + pEnt.GetHealthBuffer()), -1,
 					2.0, HINTMODE.SELFSHOW, player);
 			}
 		}
 		break;
 	case "witch":
-		AddHint(pEnt, "icon_alert_red", "当心Witch!", 1, Config.ping.duration, HINTMODE.SPECIAL, player);
+		AddHint(pEnt, "icon_alert_red", "Witch!", 1, Config.ping.duration, HINTMODE.SPECIAL, player);
 		break;
 // case "infected": // 小僵尸
 // 		break;
@@ -1182,39 +1181,39 @@ else
 				return;
 			}
 		}
-		AddHint(pEnt, "icon_interact", "医疗箱", 0,
+		AddHint(pEnt, "icon_interact", "First aid kit", 0,
 			Config.ping.duration, HINTMODE.WEAPON, player);
 		if (Config.ping.weaponMessage)
-			ClientPrint(null, 3, "\x05" + player.GetPlayerName() + " \x04标记了 \x03医疗箱");
+			ClientPrint(null, 3, "\x05" + player.GetPlayerName() + " \x04marked \x03first aid kit");
 		break;
 	case "prop_car_alarm":
 		if (!NetProps.GetPropInt( pEnt, "m_bDisabled" ) )
-			AddHint(pEnt, "icon_alert_red", "注意警报!", 0, Config.ping.duration, HINTMODE.SIGHT, player);
+			AddHint(pEnt, "icon_alert_red", "Warning!", 0, Config.ping.duration, HINTMODE.SIGHT, player);
 		else
-			AddHint(pEnt, "icon_tip", "警报不会触发", -1, 2, HINTMODE.SELFSHOW, player);
+			AddHint(pEnt, "icon_tip", "The alarm will not activate", -1, 2, HINTMODE.SELFSHOW, player);
 		break;
 	case "prop_door_rotating":
-		AddHint(pEnt, "icon_door", "走这里吧", 0, Config.ping.duration, HINTMODE.RUN, player);
+		AddHint(pEnt, "icon_door", "This way", 0, Config.ping.duration, HINTMODE.RUN, player);
 		break;
 	case "prop_door_rotating_checkpoint":
-		AddHint(pEnt, "icon_door", "安全屋", 0, Config.ping.duration, HINTMODE.RUN, player);
+		AddHint(pEnt, "icon_door", "Safe house", 0, Config.ping.duration, HINTMODE.RUN, player);
 		break;
 	// case "prop_fuel_barrel":
 	// 	break;
 	case "upgrade_ammo_explosive":
-		AddHint(pEnt, "icon_explosive_ammo", "高爆弹药", 0, Config.ping.duration, HINTMODE.WEAPON, player);
+		AddHint(pEnt, "icon_explosive_ammo", "Explosive Rounds", 0, Config.ping.duration, HINTMODE.WEAPON, player);
 		if (Config.ping.weaponMessage)
-			ClientPrint(null, 3, "\x05" + player.GetPlayerName() + " \x04标记了 \x03高爆弹药");
+			ClientPrint(null, 3, "\x05" + player.GetPlayerName() + " \x04marked \x03explosive rounds");
 		break;
 	case "upgrade_ammo_incendiary":
-		AddHint(pEnt, "icon_incendiary_ammo", "燃烧弹药", 0, Config.ping.duration, HINTMODE.WEAPON, player);
+		AddHint(pEnt, "icon_incendiary_ammo", "Incendiary Rounds", 0, Config.ping.duration, HINTMODE.WEAPON, player);
 		if (Config.ping.weaponMessage)
-			ClientPrint(null, 3, "\x05" + player.GetPlayerName() + " \x04标记了 \x03燃烧弹药");
+			ClientPrint(null, 3, "\x05" + player.GetPlayerName() + " \x04marked \x03incendiary rounds");
 		break;
 	case "upgrade_laser_sight":
-		AddHint(pEnt, "icon_laser_sight", "激光瞄准", 0, Config.ping.duration, HINTMODE.WEAPON, player);
+		AddHint(pEnt, "icon_laser_sight", "Laser Sight", 0, Config.ping.duration, HINTMODE.WEAPON, player);
 		if (Config.ping.weaponMessage)
-			ClientPrint(null, 3, "\x05" + player.GetPlayerName() + " \x04标记了 \x03激光瞄准");
+			ClientPrint(null, 3, "\x05" + player.GetPlayerName() + " \x04marked \x03laser sight");
 		break;
 	case "prop_physics":
 		local model = pEnt.GetModelName();
@@ -1223,7 +1222,7 @@ else
 			local icon = weaponIcon[weaponModel[model]], text = weaponName[weaponModel[model]];
 			AddHint(pEnt, icon, text, 0, Config.ping.duration, HINTMODE.WEAPON, player);
 			if (Config.ping.weaponMessage)
-				ClientPrint(null, 3, "\x05" + player.GetPlayerName() + " \x04标记了 \x03" + text);
+				ClientPrint(null, 3, "\x05" + player.GetPlayerName() + " \x04marked \x03" + text);
 		}
 		else
 			ShowRunHint(vecPingPos, player);
@@ -1252,7 +1251,7 @@ else
 			}
 			AddHint(pEnt, icon, text, 0, Config.ping.duration, HINTMODE.WEAPON, player);
 			if (Config.ping.weaponMessage)
-				ClientPrint(null, 3, "\x05" + player.GetPlayerName() + " \x04标记了 \x03" + text);
+				ClientPrint(null, 3, "\x05" + player.GetPlayerName() + " \x04marked \x03" + text);
 		}
 		else
 		{
@@ -1285,12 +1284,12 @@ local infoTargetEnt = null;
 	}
 	if (null == infoTargetEnt)
 	{
-		printl("[LinGe] 无法创建 info_target_instructor_hint");
+		printl("[LinGe] Unable to create info_target_instructor_hint");
 		return false;
 	}
 
 	infoTargetEnt.SetLocalOrigin(pos);
-	AddHint(infoTargetEnt, "icon_run", "这里!", -1, Config.ping.duration, HINTMODE.RUN, activator);
+	AddHint(infoTargetEnt, "icon_run", "This way!", -1, Config.ping.duration, HINTMODE.RUN, activator);
 	return true;
 }
 
@@ -1330,7 +1329,7 @@ if (!::LinGe.Hint.rawin("_buttonScaner") && ::LinGe.Hint.Config.ping.duration > 
 		// printl("[LinGe] 按键监视器已创建");
 	}
 	else
-		throw "无法创建按键监视器";
+		throw "Unable to create key monitor";
 }
 
 } // if (::LinGe.Hint.Config.limit > 0) {
