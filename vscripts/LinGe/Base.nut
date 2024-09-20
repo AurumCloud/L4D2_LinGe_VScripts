@@ -9,7 +9,7 @@ printl("[LinGe] Base 正在载入");
 ::LinGe.Debug <- false;
 
 ::LinGe.hostport <- Convars.GetFloat("hostport").tointeger();
-printl("[LinGe] 当前服务器端口 " + ::LinGe.hostport);
+printl("[LinGe] Current server port " + ::LinGe.hostport);
 
 // ---------------------------全局函数START-------------------------------------------
 // 主要用于调试

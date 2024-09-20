@@ -13,13 +13,13 @@ printl("[LinGe] 标记提示 正在载入");
 		duration = 15, 
 		dominateDelay = 0, // Incapacitation delay, time in seconds before the prompt appears after a player is incapacitated. If set to 0, the prompt appears immediately
 						// If < 0, no automatic prompt will appear for incapacitation, but players can manually call for help using a key
-		smoker = "Bound by Smoker",
-		hunter = "Pounced by Hunter",
-		charger = "Charged by Charger",
-		jockey = "Being ridden by Jockey",
-		ledge = "Hanging on the ledge",
-		dying = "Dying",
-		incap = "Incapacitated",
+		smoker = " is bound by Smoker",
+		hunter = " is pounced by Hunter",
+		charger = " is charged by Charger",
+		jockey = " is being ridden by Jockey",
+		ledge = " is hanging on the ledge",
+		dying = " is dying",
+		incap = " is incapacitated",
 	},
 
 	ping = {
@@ -27,7 +27,7 @@ printl("[LinGe] 标记提示 正在载入");
 		emptySpace = true, // 可以标记到什么都没有的位置
 		weaponMessage = true, // 标记到物资时在聊天窗发出提示消息
 	},
-	deadHint = true, // 死亡时不会出现标记提示，不过会在聊天窗输出提示 若设置为 false 则关闭该提示
+	deadHint = false, // 死亡时不会出现标记提示，不过会在聊天窗输出提示 若设置为 false 则关闭该提示
 					// 该提示对BOT不生效
 	deadChat = "再见了大家，我会想念你们的", // 若这里设置为 "" 或者 null 则以服务器式提示输出
 };
@@ -84,17 +84,17 @@ if (::LinGe.Hint.Config.limit > 8)
 if (::LinGe.Hint.Config.limit > 0) {
 
 enum HINTMODE {
-	DOMINATE = 0, // 适用队友被控
-	REVIVE, // 适用于队友倒地、挂边
-	DYING, // 适用于队友黑白
-	SPECIAL, // 适用于显示在特感上的标记
-	WEAPON, // 适用于物资
-	NORMAL, // 提示总是持续到设定时间才会关闭
-	SCREEN, // 不管配置文件如何设定，提示都只在屏幕内显示
-	SIGHT, // 提示只显示在视野内（不会在屏幕外和墙体后显示）
-	RUN, // 适用于路线标记
-	SELFSHOW, // 只显示给自己的提示
-	__MAX__
+    DOMINATE = 0, // Applicable when a teammate is controlled
+    REVIVE,       // Applicable when a teammate is down or hanging
+    DYING,        // Applicable when a teammate is in black-and-white state (near death)
+    SPECIAL,      // Applicable for marks on special infected
+    WEAPON,       // Applicable for resources/items
+    NORMAL,       // The hint will always persist until the set time is up
+    SCREEN,       // Regardless of configuration settings, the hint will only display on-screen
+    SIGHT,        // The hint will only display within the line of sight (won't show outside the screen or behind walls)
+    RUN,          // Applicable for route markers
+    SELFSHOW,     // Hints that are only visible to the player themselves
+    __MAX__
 };
 getconsttable()["LINGE_NONE_ICON"] <- "";
 
@@ -234,7 +234,7 @@ local hintTemplateTbl = {
 	if (hintMode == HINTMODE.SELFSHOW)
 	{
 		if (!activator || !activator.IsValid())
-			throw "activator 无效";
+			throw "activator invalid";
 		hintTbl.hint_nooffscreen = "1";
 		hintTbl.hint_forcecaption = "0";
 		hintTbl.hint_suppress_rest = "1";
@@ -1184,7 +1184,7 @@ else
 		AddHint(pEnt, "icon_interact", "First aid kit", 0,
 			Config.ping.duration, HINTMODE.WEAPON, player);
 		if (Config.ping.weaponMessage)
-			ClientPrint(null, 3, "\x05" + player.GetPlayerName() + " \x04marked \x03first aid kit");
+			ClientPrint(null, 3, "\x05" + player.GetPlayerName() + " \x04marked\x03 first aid kit");
 		break;
 	case "prop_car_alarm":
 		if (!NetProps.GetPropInt( pEnt, "m_bDisabled" ) )
