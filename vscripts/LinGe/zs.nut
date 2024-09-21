@@ -11,7 +11,7 @@
 //::LinGe.Cache.zs_Config <- ::LinGe.zs.Config;
 
 if (!::LinGe.isVersus && ::LinGe.zs.Config.enabled) {
-printl("[LinGe] 自杀指令 正在载入");
+printl("[LinGe] Loading Suicide Command");
 // !zs 自杀指令
 ::LinGe.zs.Cmd_zs <- function (player, args)
 {
@@ -44,6 +44,6 @@ printl("[LinGe] 自杀指令 正在载入");
 		}
 	}
 }
-::LinCmdAdd("zs", ::LinGe.zs.Cmd_zs, ::LinGe.zs, "自杀指令", false);
+::LinCmdAdd("zs", ::LinGe.zs.Cmd_zs, ::LinGe.zs, "Suicide Instructions", false);
 
 }

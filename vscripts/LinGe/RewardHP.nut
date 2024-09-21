@@ -1,6 +1,6 @@
 // 仅在非对抗类模式生效
 if (!::LinGe.isVersus) {
-printl("[LinGe] 击杀回复血量 正在载入");
+printl("[LinGe] Loading health recovery on kill");
 
 ::LinGe.RewardHP <- {};
 
@@ -102,27 +102,27 @@ printl("[LinGe] 击杀回复血量 正在载入");
 
 ::LinGe.RewardHP.Cmd_rhp <- function (player, args)
 {
-	if (2 == args.len())
-	{
-		local mode = ::LinGe.TryStringToInt(args[1], 0);
-		Config.mode = mode;
-	}
-	switch (Config.mode)
-	{
-	case 1:
-		ClientPrint(null, 3, "\x04击杀回血当前模式 \x03回复实血");
-		break;
-	case 2:
-		ClientPrint(null, 3, "\x04击杀回血当前模式 \x03回复虚血");
-		break;
-	case 3:
-		ClientPrint(null, 3, "\x04击杀回血当前模式 \x03回复虚血，满血后回复实血");
-		break;
-	default:
-		ClientPrint(null, 3, "\x04击杀回血当前模式 \x03关闭");
-		break;
-	}
-	ClientPrint(player, 3, "\x04!rhp 0:关闭 1:回复实血 2:回复虚血 3:回复虚血，条件不满足则回复实血");
+    if (args.len() == 2)
+    {
+        local mode = ::LinGe.TryStringToInt(args[1], 0);
+        Config.mode = mode;
+    }
+    switch (Config.mode)
+    {
+    case 1:
+        ClientPrint(null, 3, "\x04Current kill-lifesteal mode: \x03Restore real health");
+        break;
+    case 2:
+        ClientPrint(null, 3, "\x04Current kill-lifesteal mode: \x03Restore temporary health");
+        break;
+    case 3:
+        ClientPrint(null, 3, "\x04Current kill-lifesteal mode: \x03Restore temporary health, then real health if full");
+        break;
+    default:
+        ClientPrint(null, 3, "\x04Current kill-lifesteal mode: \x03Disabled");
+        break;
+    }
+    ClientPrint(player, 3, "\x04!rhp 0: Disabled 1: Restore real health 2: Restore temporary health 3: Restore temporary health, if conditions are not met, restore real health");
 }
 ::LinCmdAdd("rhp", ::LinGe.RewardHP.Cmd_rhp, ::LinGe.RewardHP, "0:关闭 1:回复实血 2:回复虚血 3:回复虚血，条件不满足则回复实血");
 
