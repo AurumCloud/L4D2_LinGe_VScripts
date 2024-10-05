@@ -1184,7 +1184,7 @@ else
 		AddHint(pEnt, "icon_interact", "First aid kit", 0,
 			Config.ping.duration, HINTMODE.WEAPON, player);
 		if (Config.ping.weaponMessage)
-			ClientPrint(null, 3, "\x05" + player.GetPlayerName() + " \x04marked\x03 first aid kit");
+			ClientPrint(null, 3, "\x05" + player.GetPlayerName() + " \x04marked\x03 Medical Cabinet");
 		break;
 	case "prop_car_alarm":
 		if (!NetProps.GetPropInt( pEnt, "m_bDisabled" ) )
@@ -1203,17 +1203,17 @@ else
 	case "upgrade_ammo_explosive":
 		AddHint(pEnt, "icon_explosive_ammo", "Explosive Rounds", 0, Config.ping.duration, HINTMODE.WEAPON, player);
 		if (Config.ping.weaponMessage)
-			ClientPrint(null, 3, "\x05" + player.GetPlayerName() + " \x04marked \x03explosive rounds");
+			ClientPrint(null, 3, "\x05" + player.GetPlayerName() + " \x04marked \x03Explosive Rounds");
 		break;
 	case "upgrade_ammo_incendiary":
 		AddHint(pEnt, "icon_incendiary_ammo", "Incendiary Rounds", 0, Config.ping.duration, HINTMODE.WEAPON, player);
 		if (Config.ping.weaponMessage)
-			ClientPrint(null, 3, "\x05" + player.GetPlayerName() + " \x04marked \x03incendiary rounds");
+			ClientPrint(null, 3, "\x05" + player.GetPlayerName() + " \x04marked \x03Incendiary Rounds");
 		break;
 	case "upgrade_laser_sight":
 		AddHint(pEnt, "icon_laser_sight", "Laser Sight", 0, Config.ping.duration, HINTMODE.WEAPON, player);
 		if (Config.ping.weaponMessage)
-			ClientPrint(null, 3, "\x05" + player.GetPlayerName() + " \x04marked \x03laser sight");
+			ClientPrint(null, 3, "\x05" + player.GetPlayerName() + " \x04marked \x03Laser Sight");
 		break;
 	case "prop_physics":
 		local model = pEnt.GetModelName();
